@@ -1,3 +1,3 @@
 # This folder will be used for lab assignments
-## Assignments:
+### Assignments:
 [RGB LED Control](Homework1)
