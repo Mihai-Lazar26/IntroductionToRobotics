@@ -11,7 +11,6 @@ const int minAnalogWriteValue = 0;
 const int maxAnalogWriteValue = 255;
 
 void setup() {
-  // put your setup code here, to run once:
   pinMode(redLedPin, OUTPUT);
   pinMode(greenLedPin, OUTPUT);
   pinMode(blueLedPin, OUTPUT);
@@ -22,7 +21,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   int redPotValue = analogRead(redPotPin);
   int greenPotValue = analogRead(greenPotPin);
   int bluePotValue = analogRead(bluePotPin);
