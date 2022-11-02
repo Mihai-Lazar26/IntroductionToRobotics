@@ -23,12 +23,12 @@ const int buzzerBeepOff2 = 200;
 const int ledBlinkOn = 500;
 const int ledBlinkOff = 200;
 
-const unsigned int buttonPressDelay = 1000*23;
+const unsigned int buttonPressDelay = 1000 * 23;
 
-const unsigned int delayState1State2 = 1000*8;
-const unsigned int delayState2State3 = 1000*3;
-const unsigned int delayState3State4 = 1000*8;
-const unsigned int delayState4State1 = 1000*4;
+const unsigned int delayState1State2 = 1000 * 8;
+const unsigned int delayState2State3 = 1000 * 3;
+const unsigned int delayState3State4 = 1000 * 8;
+const unsigned int delayState4State1 = 1000 * 4;
 
 const unsigned int debounceDelay = 50;
 
