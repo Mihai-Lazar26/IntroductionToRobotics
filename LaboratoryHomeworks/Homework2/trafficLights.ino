@@ -55,8 +55,6 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(buttonPin), buttonISR, CHANGE);
 
   states(currentState);
-
-  Serial.begin(9600);
 }
 
 void loop() {
@@ -70,7 +68,6 @@ void loop() {
     if (pressed) {
       lastButtonPress = millis();
       executeSequence = true;
-      Serial.println("START " + String(millis()));
     }
   }
 
