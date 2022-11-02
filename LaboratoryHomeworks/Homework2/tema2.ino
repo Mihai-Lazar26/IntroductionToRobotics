@@ -32,7 +32,7 @@ const unsigned int debounceDelay = 50;
 
 int currentState = STATE_1;
 
-byte buttonState = LOW;
+byte buttonState = HIGH;
 
 unsigned long lastButtonPress = 0;
 
