@@ -13,7 +13,7 @@ const int ledPinGreenPeople = 12;
 const int buzzerPin = 5;
 const int buttonPin = 2;
 
-const int buzzerFrequency = 100;
+const int buzzerFrequency = 500;
 
 const int buzzerBeepOn1 = 1000;
 const int buzzerBeepOff1 = 200;
@@ -57,8 +57,6 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(buttonPin), buttonISR, CHANGE);
 
   states(currentState);
-
-  Serial.begin(9600);
 }
 
 void loop() {
@@ -88,8 +86,8 @@ byte debounceButton(byte reading) {
     if (buttonState == LOW) {
       return true;
     }
-  return false;
   }
+  return false;
 }
 
 void stateHandler() {
@@ -145,7 +143,7 @@ void states(int &currentState) {
   }
 }
 
-void buzzerBeep(int buzzerPin, int frequency, int delayOn, int delayOff) {
+void buzzerBeep(int buzzerPin, int frequency, unsigned int delayOn, unsigned int delayOff) {
   unsigned long timeDif = millis() - lastBuzzerBeep;
   if (timeDif <= delayOn) {
     tone(buzzerPin, frequency);
@@ -158,7 +156,7 @@ void buzzerBeep(int buzzerPin, int frequency, int delayOn, int delayOff) {
   }
 }
 
-void ledBlink(int ledPin, int delayOn, int delayOff) {
+void ledBlink(int ledPin, unsigned int delayOn, unsigned int delayOff) {
   unsigned long timeDif = millis() - lastLedBlink;
   if (timeDif <= delayOn) {
     digitalWrite(ledPin, HIGH);
