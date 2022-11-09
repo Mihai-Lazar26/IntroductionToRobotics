@@ -1,4 +1,4 @@
-# 7-segment display controlled with joystick
+# 7-segment display draw with joystick
 
 * Components: 1 7-segment display, 1 joystick, resistors and wires
 * General description: I will use the joystick to control the position of the segment and ”draw” on the display. The movement between segments should be natural (meaning they should jump from the current position only to neighbors, but without passing through ”walls”).
