@@ -1,1 +1,1 @@
-# 7 segment digit control with joystick
+# 7-segment display controlled with joystick
