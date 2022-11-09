@@ -98,15 +98,18 @@ void loop() {
   lastSWState = reading;
 
   if (pressed) {
-    if (currentState == STATE_1)
+    if (currentState == STATE_1) {
       currentState = STATE_2;
-    else
+    }
+    else {
       currentState = STATE_1;
+    }
+
     toggle = true;
     lastPressTime = millis();
   }
 
-  if (toggle && millis() - lastPressTime > longPressTime && currentSWState == LOW){
+  if (toggle && millis() - lastPressTime > longPressTime && currentSWState == LOW && currentState == STATE_2){
     toggle = false;
     reset();
   }
