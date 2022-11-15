@@ -83,7 +83,6 @@ byte currentDisplay = 0;
 unsigned long lastLedBlink = 0;
 
 void setup() {
-  // put your setup code here, to run once:
   pinMode(latchPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
@@ -153,7 +152,6 @@ void reset() {
 void stateHandler() {
   int joyY = analogRead(joyYPin);
   int joyX = analogRead(joyXPin);
-  // Serial.println("x: " + String(joyX) + " y: " + String(joyY));
   if (currentState == STATE_1) {
     if(joyY < joyLeftThreshold && joyIsNeutral) {
       joyIsNeutral = false;
