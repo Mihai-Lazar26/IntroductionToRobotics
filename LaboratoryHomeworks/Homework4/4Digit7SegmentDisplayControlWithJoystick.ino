@@ -95,8 +95,6 @@ void setup() {
   pinMode(joyXPin, INPUT);
   pinMode(joyYPin, INPUT);
   pinMode(joySWPin, INPUT_PULLUP);
-
-  Serial.begin(9600);
 }
 
 void loop() {
