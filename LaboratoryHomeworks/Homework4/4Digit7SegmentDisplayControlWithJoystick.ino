@@ -1,7 +1,3 @@
-//DS= [D]ata [S]torage - data
-//STCP= [ST]orage [C]lock [P]in latch
-//SHCP= [SH]ift register [C]lock [P]in clock
-
 #define STATE_1 1
 #define STATE_2 2
 #define UP 0
@@ -27,8 +23,6 @@ const int segD1 = 7;
 const int segD2 = 6;
 const int segD3 = 5;
 const int segD4 = 4;
-
-const byte regSize = 8; // 1 byte aka 8 bits
 
 const int blinkOnDelay = 500;
 const int blinkOffDelay = 500;
@@ -114,7 +108,7 @@ void loop() {
     }
   }
 
-  if (resetPossible && millis() - lastPressTime > longPressTime && currentSWState == LOW){
+  if (resetPossible && millis() - lastPressTime > longPressTime && currentSWState == LOW) {
     resetPossible = false;
     reset();
   }
@@ -151,27 +145,27 @@ void stateHandler() {
   int joyY = analogRead(joyYPin);
   int joyX = analogRead(joyXPin);
   if (currentState == STATE_1) {
-    if(joyY < joyLeftThreshold && joyIsNeutral) {
+    if (joyY < joyLeftThreshold && joyIsNeutral) {
       joyIsNeutral = false;
       currentDisplay = constrain(currentDisplay + 1, 0, displayCount - 1);
     }
-    if(joyY > joyRightThreshold && joyIsNeutral) {
+    if (joyY > joyRightThreshold && joyIsNeutral) {
       joyIsNeutral = false;
       currentDisplay = constrain(currentDisplay - 1, 0, displayCount - 1);
     }
   }
   else if (currentState == STATE_2) {
-    if(joyX < joyDownThreshold && joyIsNeutral) {
+    if (joyX < joyDownThreshold && joyIsNeutral) {
       joyIsNeutral = false;
       displayValues[currentDisplay] = constrain(displayValues[currentDisplay] - 1, 0, encodingsNumber - 1);
     }
-    if(joyX > joyUpThreshold && joyIsNeutral) {
+    if (joyX > joyUpThreshold && joyIsNeutral) {
       joyIsNeutral = false;
       displayValues[currentDisplay] = constrain(displayValues[currentDisplay] + 1, 0, encodingsNumber - 1);
     } 
   }
 
-  if(joyLeftThreshold <= joyY && joyY <= joyRightThreshold && joyDownThreshold <= joyX && joyX <= joyUpThreshold) {
+  if (joyLeftThreshold <= joyY && joyY <= joyRightThreshold && joyDownThreshold <= joyX && joyX <= joyUpThreshold) {
     joyIsNeutral = true;
   }
 }
