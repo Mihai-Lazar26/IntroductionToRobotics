@@ -19,6 +19,6 @@
   3. Game over screens
 * Settings and highscores are saved in EEPROM.
 
-* [Video](https://www.youtube.com/watch?v=rTzllapS3T0)
+* [Video](https://youtu.be/iTzzmph6jW4)
 
 ![Image](Setup_Picture.jpg)
