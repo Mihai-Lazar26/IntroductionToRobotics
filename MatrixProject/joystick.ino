@@ -12,6 +12,16 @@ const int joyRightThreshold = 700;
 const int joyDownThreshold = 300;
 const int joyUpThreshold = 700;
 
+const int buzzerFrequency = 500;
+const int buzzerDuration = 200;
+
+const unsigned int minDelay = 200;
+const unsigned int defaultDelay = 500;
+const unsigned int speedIncrease = 1;
+
+unsigned int delayMove = defaultDelay;
+unsigned long lastMoveTime = 0;
+
 bool joyIsNeutral = true;
 bool joySWState = HIGH;
 bool joyPrevSWState = HIGH;
@@ -26,19 +36,27 @@ byte resetPossible = false;
 byte lastSWState = HIGH;
 byte currentSWState = HIGH;
 
-unsigned long lastMoveTime = 0;
-const unsigned int delayMove = 500;
-
 byte direction;
 byte lastDirection;
 
-// void setDirection(byte val) {
-//   direction = val;
-// }
+void setDelay(const int &newDelay) {
+  delayMove = newDelay;  
+  if (delayMove < minDelay) {
+    delayMove = minDelay;
+  }
+}
 
-// byte getDirection() {
-//   return direction;
-// }
+void addDelay(const int &newDelay) {
+  setDelay(delayMove + newDelay);
+}
+
+void setDefaultDelay() {
+  delayMove = defaultDelay;
+}
+
+int getSpeed() {
+  return defaultDelay - delayMove;
+}
 
 void joystickSetup() {
   pinMode(joyXPin, INPUT);
@@ -55,16 +73,16 @@ void joystickGameLoop() {
   int joyX = analogRead(joyXPin);
   int joyY = analogRead(joyYPin);
 
-  if(joyY < joyLeftThreshold && lastDirection != LEFT) {
+  if (joyY < joyLeftThreshold && lastDirection != LEFT) {
     direction = RIGHT;
   }
-  if(joyY > joyRightThreshold && lastDirection != RIGHT) {
+  if (joyY > joyRightThreshold && lastDirection != RIGHT) {
     direction = LEFT;
   }
-  if(joyX < joyDownThreshold && lastDirection != DOWN) {
+  if (joyX < joyDownThreshold && lastDirection != DOWN) {
     direction = UP;
   }
-  if(joyX > joyUpThreshold && lastDirection != UP) {
+  if (joyX > joyUpThreshold && lastDirection != UP) {
     direction = DOWN;
   }
 
@@ -88,6 +106,12 @@ void joystickGameLoop() {
     }
 
     lastMoveTime = millis();
+
+    addDelay(-speedIncrease);
+
+    if (soundsOn) {
+      tone(buzzerPin, buzzerFrequency, buzzerDuration);
+    }
   }
 }
 
@@ -95,31 +119,52 @@ void joystickMenuLoop() {
   int joyX = analogRead(joyXPin);
   int joyY = analogRead(joyYPin);
 
-  if(joyX < joyDownThreshold && joyIsNeutral) {
+  if (joyX < joyDownThreshold && joyIsNeutral) {
+    if (soundsOn) {
+      tone(buzzerPin, buzzerFrequency, buzzerDuration);
+    }
     moveUpMenu();
     joyIsNeutral = false;
   }
-  if(joyX > joyUpThreshold && joyIsNeutral) {
+  if (joyX > joyUpThreshold && joyIsNeutral) {
+    if (soundsOn) {
+      tone(buzzerPin, buzzerFrequency, buzzerDuration);
+    }
     moveDownMenu();
     joyIsNeutral = false;
   }
-  if(joyY < joyLeftThreshold && joyIsNeutral) {
+  if (joyY < joyLeftThreshold && joyIsNeutral) {
+    if (soundsOn) {
+      tone(buzzerPin, buzzerFrequency, buzzerDuration);
+    }
     moveRightMenu();
     joyIsNeutral = false;
   }
-  if(joyY > joyRightThreshold && joyIsNeutral) {
+  if (joyY > joyRightThreshold && joyIsNeutral) {
+    if (soundsOn) {
+      tone(buzzerPin, buzzerFrequency, buzzerDuration);
+    }
     moveLeftMenu();
     joyIsNeutral = false;
   }
 
-  if(joyLeftThreshold <= joyY && joyY <= joyRightThreshold && joyDownThreshold <= joyX && joyX <= joyUpThreshold) {
+  if (joyLeftThreshold <= joyY && joyY <= joyRightThreshold && joyDownThreshold <= joyX && joyX <= joyUpThreshold) {
     joyIsNeutral = true;
   }
+
+  if (debounceSW()) {
+    if (soundsOn) {
+      tone(buzzerPin, buzzerFrequency, buzzerDuration);
+    }
+    buttonPress();    
+  }  
 }
 
-void debounceSW() {
+byte debounceSW() {
   byte reading = digitalRead(joySWPin);
-  byte pressed = debounceButton(reading, currentSWState, lastSWState, lastSWStateChange, debounceDelay);
+  lastSWState = reading;
+
+  return debounceButton(reading, currentSWState, lastSWState, lastSWStateChange, debounceDelay);
 }
 
 byte debounceButton(byte &reading, byte &buttonState, byte &lastButtonState, unsigned long &lastDebounceTime, unsigned int &debounceDelay) {

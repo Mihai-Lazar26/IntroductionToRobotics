@@ -3,6 +3,7 @@
 #define EMPTY 0
 #define SNAKE 1
 #define FOOD 2
+#define WALL 3
 
 #define SEGMENT_ROW 0
 #define SEGMENT_COL 1
@@ -14,24 +15,62 @@
 #define RIGHT 3
 
 const unsigned int foodBlinkOn = 500, foodBlinkOff = 500;
+const unsigned int headBlinkOn = 50, headBlinkOff = 50;
+
+const byte maxSnakeSegments = 64;
+byte lastSegment;
+byte snakeSegments[2][maxSnakeSegments];
 
 byte matrixState[matrixSize][matrixSize];
 byte foodRow, foodCol;
 byte score;
 
 unsigned long lastHeadBlink = 0, lastFoodBlink = 0;
-const int headBlinkOn = 50, headBlinkOff = 50;
 
-const byte maxSnakeSegments = 64;
-byte lastSegment;
-byte snakeSegments[2][maxSnakeSegments];
-
-void gameSetup() {
-  for (int row = 0; row < matrixSize; ++row){
-    for (int col = 0; col < matrixSize; ++col){
-      matrixState[col][row] = EMPTY;
+void boardSetup() {
+  if (difficulty == EASY) {
+    for (int row = 0; row < matrixSize; ++row){
+      for (int col = 0; col < matrixSize; ++col){
+        matrixState[col][row] = EMPTY;
+      }
     }
   }
+  else if (difficulty == NORMAL) {
+    for (int row = 0; row < matrixSize; ++row){
+      for (int col = 0; col < matrixSize; ++col){
+        if (row == 0 || row == matrixSize - 1 || col == 0 || col == matrixSize - 1) {
+          matrixState[col][row] = WALL;
+        }
+        else {
+          matrixState[col][row] = EMPTY;
+        }
+      }
+    }
+  }
+  else if (difficulty == HARD) {
+    for (int row = 0; row < matrixSize; ++row){
+      for (int col = 0; col < matrixSize; ++col){
+        if (row == 0 || row == matrixSize - 1 || col == 0 || col == matrixSize - 1) {
+          matrixState[col][row] = WALL;
+        }
+        else {
+          matrixState[col][row] = EMPTY;
+        }
+      }
+    }
+    matrixState[1][5] = WALL;
+    matrixState[1][6] = WALL;
+    matrixState[2][5] = WALL;
+    matrixState[2][6] = WALL;
+    matrixState[3][1] = WALL;
+    matrixState[3][2] = WALL;
+    matrixState[5][4] = WALL;
+    matrixState[5][5] = WALL;
+  }
+}
+
+void gameSetup() {
+  boardSetup();
   byte snakeRow = matrixSize / 2;
   byte snakeCol = matrixSize / 2 - 1;
   snakeSegments[SEGMENT_ROW][SEGMENT_HEAD] = snakeRow;
@@ -47,7 +86,6 @@ void gameSetup() {
 
 void gameLoop() {
   gameUpdate();
-  // Serial.println("Score: " + String(score));
 }
 
 void addSnakeSegment(byte row, byte col) {
@@ -69,7 +107,15 @@ void moveSnakeSegments(byte row, byte col, byte turnOffLastSegment) {
 }
 
 void eatFood() {
-  ++score;
+  if (difficulty == EASY) {
+    score += 1;
+  }
+  else if (difficulty == NORMAL){
+    score += 5;
+  }
+  else if (difficulty == HARD) {
+    score += 9;
+  }
   matrixState[foodRow][foodCol] = EMPTY;
   addSnakeSegment(foodRow, foodCol);
   generateRandomFood();
@@ -108,7 +154,7 @@ void moveLeft() {
     moveSnakeSegments(snakeRow, snakeCol, true);
   }
   else {
-    printColiziune(snakeRow, snakeCol);
+    // printColiziune(snakeRow, snakeCol);
     gameOver();
   }
 }
@@ -124,7 +170,7 @@ void moveRight() {
     moveSnakeSegments(snakeRow, snakeCol, true);
   }
   else {
-    printColiziune(snakeRow, snakeCol);
+    // printColiziune(snakeRow, snakeCol);
     gameOver();
   }
 }
@@ -140,7 +186,7 @@ void moveUp() {
     moveSnakeSegments(snakeRow, snakeCol, true);
   }
   else {
-    printColiziune(snakeRow, snakeCol);
+    // printColiziune(snakeRow, snakeCol);
     gameOver();
   }
 }
@@ -156,35 +202,22 @@ void moveDown() {
     moveSnakeSegments(snakeRow, snakeCol, true);
   }
   else {
-    printColiziune(snakeRow, snakeCol);
+    // printColiziune(snakeRow, snakeCol);
     gameOver();
   }
 }
 
-void printColiziune(byte rowColiziune, byte colColiziune) {
-  for (int row = 0; row < matrixSize; ++row){
-    for (int col = 0; col < matrixSize; ++col){
-      if(row != rowColiziune || col != colColiziune) {
-        Serial.print(String(matrixState[row][col]) + " ");
-      }
-      else {
-        Serial.print("X ");
-      }
-    }
-    Serial.println();
-  }
-  Serial.println();
-}
-
 void gameOver() {
-  Serial.println("Score: " + String(score));
-  // newGame();
-  lcd.clear();
-  state = MENU;
+  UserScore user;
+  user.score = score;
+  user.setName(currentName);
+  addUser(user);
+  gameOverMenu();
 }
 
 void newGame() {
   lcd.clear();
+  setDefaultDelay();
   joyStickGameSetup();
   gameSetup();
   // state = GAME;
@@ -224,5 +257,11 @@ void lcdGame() {
   lcd.setCursor(0, 0);
   lcd.print("Score: ");
   lcd.print(score);
+  lcd.setCursor(0, 1);
+  lcd.print("Game speed: ");
+  lcd.print(getSpeed());
 }
 
+byte getScore() {
+  return score;
+}
