@@ -17,6 +17,7 @@
       - How to play
   2. Game
   3. Game over screens
+* Settings and highscores are saved in EEPROM.
 
 * [Video](https://www.youtube.com/watch?v=rTzllapS3T0)
 
